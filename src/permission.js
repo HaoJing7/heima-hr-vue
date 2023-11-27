@@ -9,7 +9,7 @@ import store from "@/store";
  */
 // 白名单
 const whiteList = ['/login', '/404']
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   nprogress.start()
   if (store.getters.token) {
     // 有token的情况下
@@ -19,6 +19,11 @@ router.beforeEach((to, from, next) => {
       // next放行函数里面有地址的时候不会执行后置守卫
       nprogress.done() // 手动关闭进度条
     } else {
+      // 判断是否获取过userInfo
+      if (!store.getters.userId) {
+        // 要等该动作执行完才执行下面的逻辑 要加await
+        await store.dispatch('user/getUserInfo')
+      }
       next() // 访问的不是登陆页，则直接放行
     }
   } else {

@@ -14,3 +14,14 @@ export function login(data) {
     data
   })
 }
+
+/**
+ * 获取用户资料
+ */
+export function getUserInfo() {
+  return request({
+    url: '/sys/profile',
+    // 默认是get类型，可以不写
+    method: 'get',
+  })
+}
