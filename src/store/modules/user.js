@@ -17,13 +17,13 @@ const mutations = {
     // 同步到Cookie缓存
     setToken(token)
   },
-  removeToken() {
+  removeToken(state) {
     state.token = null
     removeToken()
   },
   setUserInfo(state, userInfo) {
     state.userInfo = userInfo
-  }
+  },
 }
 
 const actions = {
@@ -40,6 +40,11 @@ const actions = {
   async getUserInfo(context) {
     const result = await getUserInfo()
     context.commit('setUserInfo', result)
+  },
+  // 注销
+  logout(context) {
+    context.commit('removeToken') // 删除token
+    context.commit('setUserInfo', {}) // 设置用户信息为空对象
   }
 }
 

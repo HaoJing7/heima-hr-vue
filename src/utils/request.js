@@ -1,6 +1,7 @@
 import axios from 'axios'
 import store from "@/store";
 import {Message} from "element-ui";
+import router from "@/router";
 // 创建一个axios实例
 const service = axios.create({
   // 基础地址
@@ -36,7 +37,16 @@ service.interceptors.response.use(
       return Promise.reject(new Error(message))
     }
   },
-  (error) => {
+  async (error) => {
+    // debugger用于调试
+    // debugger
+    if (error.response.status === 401) {
+      Message({type: 'warning', message: 'token超时了'})
+      await store.dispatch('user/logout') // 调用action退出登陆
+      router.push('/login') // 跳转到登录页
+      return Promise.reject(error)
+    }
+    // 使用ElementUI的Message
     Message({type: 'error', message: error.message})
     return Promise.reject(error)
   },
