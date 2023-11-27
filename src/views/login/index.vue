@@ -30,9 +30,9 @@ export default {
   data() {
     return {
       loginForm: {
-        mobile: '',
-        password: '',
-        isAgree: false
+        mobile: process.env.NODE_ENV === 'development' ? '13800000002' : '',
+        password: process.env.NODE_ENV === 'development' ? 'hm#qd@23!' : '',
+        isAgree: process.env.NODE_ENV === 'development'
       },
       loginRules: {
         mobile: [{
@@ -65,10 +65,13 @@ export default {
   },
   methods: {
     login() {
-      this.$refs.form.validate((isOk) => {
+      this.$refs.form.validate(async (isOk) => {
         if (isOk) {
           // this.$message.success('校验通过');
-          this.$store.dispatch('user/login', this.loginForm);
+          await this.$store.dispatch('user/login', this.loginForm);
+          // Vuex中的action返回的promise
+          // 跳转主页
+          this.$router.push('/')
         }
       })
     }

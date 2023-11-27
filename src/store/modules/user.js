@@ -1,4 +1,6 @@
 import {getToken, removeToken, setToken} from "@/utils/auth";
+import {login} from "@/api/user";
+import async from "async";
 /*
 读取数据，走 state, getters
 修改数据，走 mutations（修改state数据）, actions（异步操作）
@@ -23,10 +25,12 @@ const mutations = {
 
 const actions = {
   // context上下文  传入参数
-  login(context, data) {
+  async login(context, data) {
     console.log(data)
     // TODO 调用登录接口
-    context.commit('setToken', '123456')
+    const token = await login(data)
+    // await 同步方式，后续代码不会在结果返回前执行
+    context.commit('setToken', token)
   }
 }
 
