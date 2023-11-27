@@ -4,7 +4,8 @@ import {Message} from "element-ui";
 // 创建一个axios实例
 const service = axios.create({
   // 基础地址
-  baseURL: '/api',
+  // baseURL: '/api',
+  baseURL: process.env.VUE_APP_BASE_API,
   // 超时时间 ms
   timeout: 10000
 })
