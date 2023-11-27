@@ -24,7 +24,6 @@
   </div>
 </template>
 <script>
-import {error} from "autoprefixer/lib/utils";
 
 export default {
   name: "Login",
@@ -68,7 +67,8 @@ export default {
     login() {
       this.$refs.form.validate((isOk) => {
         if (isOk) {
-          this.$message.success('校验通过');
+          // this.$message.success('校验通过');
+          this.$store.dispatch('user/login', this.loginForm);
         }
       })
     }
