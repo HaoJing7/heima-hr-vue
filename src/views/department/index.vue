@@ -30,7 +30,7 @@
     <!--放置弹层-->
     <!--.sync表示会自动监听子组件的事件-->
     <!--子组件this.$emit(事件, 值)，值会赋给前面的属性-->
-    <add-dept :current-node-id="currentNodeId" :show-dialog.sync="showDialog"/>
+    <add-dept @updateDepartment="getDepartment" :current-node-id="currentNodeId" :show-dialog.sync="showDialog"/>
   </div>
 </template>
 

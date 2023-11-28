@@ -19,3 +19,14 @@ export function getMangerList() {
     method: 'get'
   })
 }
+
+/**
+ * 新增组织
+ */
+export function addDepartment(data) {
+  return request({
+    url: '/company/department',
+    method: 'post',
+    data
+  })
+}
