@@ -7,8 +7,8 @@
         <template v-slot="{data}">
           <el-row style="width:100%;height:40px" type="flex" justify="space-between" align="middle">
             <el-col>{{data.name}}</el-col>
-            <el-col :span="4">
-              <span class="tree-manager">{{data.manageName}}</span>
+            <el-col :span="6">
+              <span class="tree-manager" style="width: 80px">{{data.managerName}}</span>
               <el-dropdown>
                 <!--显示区域内容-->
                 <span class="el-dropdown-link">
@@ -30,29 +30,27 @@
 </template>
 
 <script>
+import {getDepartment} from "@/api/department";
+import {transListToTreeData} from "@/utils";
 export default {
   name: 'Department',
+  created() {
+    this.getDepartment()
+  },
   data() {
     return {
       // 数据属性
-      depts: [{
-        name: '传智教育',
-        manageName: '管理员',
-        children: [{
-          name: '总裁办',
-          manageName: '张三',
-        }, {
-          name: '行政部',
-          manageName: '李四',
-        }, {
-          name: '人事部',
-          manageName: '王五',
-        }]
-      }],
+      depts: [],
       defaultProps: {
         label: 'name',
         children: 'children'
       }
+    }
+  },
+  methods: {
+    async getDepartment() {
+      const result = await getDepartment()
+      this.depts = transListToTreeData(result, 0)
     }
   }
 }
