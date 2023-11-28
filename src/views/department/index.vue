@@ -9,7 +9,8 @@
             <el-col>{{data.name}}</el-col>
             <el-col :span="6">
               <span class="tree-manager" style="width: 80px">{{data.managerName}}</span>
-              <el-dropdown @command="operateDept">
+              <!--$event 实参 表示操作类型-->
+              <el-dropdown @command="operateDept($event, data.id)">
                 <!--显示区域内容-->
                 <span class="el-dropdown-link">
                 操作<i class="el-icon-arrow-down el-icon--right"/>
@@ -29,7 +30,7 @@
     <!--放置弹层-->
     <!--.sync表示会自动监听子组件的事件-->
     <!--子组件this.$emit(事件, 值)，值会赋给前面的属性-->
-    <add-dept :show-dialog.sync="showDialog"/>
+    <add-dept :current-node-id="currentNodeId" :show-dialog.sync="showDialog"/>
   </div>
 </template>
 
@@ -44,14 +45,13 @@ export default {
   },
   data() {
     return {
-      // 数据属性
-      depts: [],
+      depts: [], // 数据属性
       defaultProps: {
         label: 'name',
         children: 'children'
       },
-      // 弹层显示
-      showDialog: false,
+      showDialog: false, // 弹层显示
+      currentNodeId: null, // 当前点击的id
     }
   },
   created() {
@@ -64,10 +64,11 @@ export default {
       this.depts = transListToTreeData(result, 0)
     },
     // 操作部门的方法
-    operateDept(type) {
+    operateDept(type, id) {
       // this.$message.info(type)
       if (type === 'add') {
         this.showDialog = true
+        this.currentNodeId = id
       } else if (type === 'edit') {
 
       } else {

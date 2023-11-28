@@ -9,3 +9,13 @@ export function getDepartment () {
     method: 'get'
   })
 }
+
+/**
+ * 获取部门负责人
+ */
+export function getMangerList() {
+  return request({
+    url: '/sys/user/simple',
+    method: 'get'
+  })
+}
