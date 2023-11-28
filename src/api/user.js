@@ -25,3 +25,14 @@ export function getUserInfo() {
     method: 'get',
   })
 }
+
+/**
+ * 修改密码
+ */
+export function updatePassword(data) {
+  return request({
+    url: '/sys/user/updatePass',
+    method: 'put',
+    data
+  })
+}
