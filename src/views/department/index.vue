@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="app-container">
-      <el-tree :data="depts" expand-on-click-node="false" default-expand-all :props="defaultProps">
+      <el-tree :data="depts" :expand-on-click-node="false" default-expand-all :props="defaultProps">
         <!--结点结构-->
         <!--v-slot='{node, data}' v-slot只能作用在template上-->
         <template v-slot="{data}">
