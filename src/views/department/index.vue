@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import {getDepartment} from "@/api/department";
+import {delDepartment, getDepartment} from "@/api/department";
 import {transListToTreeData} from "@/utils";
 import AddDept from "@/views/department/components/AddDept.vue";
 export default {
@@ -81,7 +81,13 @@ export default {
           this.$refs.addDept.getDepartmentDetail()
         })
       } else {
-
+        // 删除部门
+        this.$confirm('您确定要删除部门吗').then(async () => {
+          // console.log('确认删除')
+          await delDepartment(id)
+          this.$message.success('删除部门成功')
+          this.getDepartment()
+        })
       }
     }
   }
