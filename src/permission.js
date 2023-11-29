@@ -1,7 +1,7 @@
-import router from "@/router";
+import router from '@/router'
 import nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
-import store from "@/store";
+import store from '@/store'
 
 /**
  * 前置守卫
@@ -9,7 +9,7 @@ import store from "@/store";
  */
 // 白名单
 const whiteList = ['/login', '/404']
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   nprogress.start()
   if (store.getters.token) {
     // 有token的情况下

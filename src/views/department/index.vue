@@ -6,15 +6,15 @@
         <!--v-slot='{node, data}' v-slot只能作用在template上-->
         <template v-slot="{data}">
           <el-row style="width:100%;height:40px" type="flex" justify="space-between" align="middle">
-            <el-col>{{data.name}}</el-col>
+            <el-col>{{ data.name }}</el-col>
             <el-col :span="6">
-              <span class="tree-manager" style="width: 80px">{{data.managerName}}</span>
+              <span class="tree-manager" style="width: 80px">{{ data.managerName }}</span>
               <!--$event 实参 表示操作类型-->
               <el-dropdown @command="operateDept($event, data.id)">
                 <!--显示区域内容-->
                 <span class="el-dropdown-link">
-                操作<i class="el-icon-arrow-down el-icon--right"/>
-              </span>
+                  操作<i class="el-icon-arrow-down el-icon--right" />
+                </span>
                 <!--下拉菜单选项-->
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="add">添加子部门</el-dropdown-item>
@@ -31,18 +31,18 @@
     <!--.sync表示会自动监听子组件的事件-->
     <!--子组件this.$emit(事件, 值)，值会赋给前面的属性-->
     <!--ref可以获取dom实例对象，也可以获取自定义组件的实例对象-->
-    <add-dept ref="addDept" @updateDepartment="getDepartment" :current-node-id="currentNodeId" :show-dialog.sync="showDialog"/>
+    <add-dept ref="addDept" :current-node-id="currentNodeId" :show-dialog.sync="showDialog" @updateDepartment="getDepartment" />
   </div>
 </template>
 
 <script>
-import {delDepartment, getDepartment} from "@/api/department";
-import {transListToTreeData} from "@/utils";
-import AddDept from "@/views/department/components/AddDept.vue";
+import { delDepartment, getDepartment } from '@/api/department'
+import { transListToTreeData } from '@/utils'
+import AddDept from '@/views/department/components/AddDept.vue'
 export default {
   name: 'Department',
   components: {
-    AddDept,
+    AddDept
   },
   data() {
     return {
@@ -52,7 +52,7 @@ export default {
         children: 'children'
       },
       showDialog: false, // 弹层显示
-      currentNodeId: null, // 当前点击的id
+      currentNodeId: null // 当前点击的id
     }
   },
   created() {
@@ -82,7 +82,7 @@ export default {
         })
       } else {
         // 删除部门
-        this.$confirm('您确定要删除部门吗').then(async () => {
+        this.$confirm('您确定要删除部门吗').then(async() => {
           // console.log('确认删除')
           await delDepartment(id)
           this.$message.success('删除部门成功')
