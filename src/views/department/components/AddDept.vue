@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增部门" @close="close" :visible="showDialog">
+  <el-dialog :title="showTitle" @close="close" :visible="showDialog">
     <el-form ref="addDept" :model="formData" :rules="rules" label-width="120px">
       <el-form-item prop="name" label="部门名称">
         <el-input v-model="formData.name" placeholder="2-10个字符" style="width: 80%;" size="mini"/>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import {addDepartment, getDepartment, getMangerList} from "@/api/department";
+import {addDepartment, getDepartment, getDepartmentDetail, getMangerList, updateDepartment} from "@/api/department";
 
 export default {
   props: {
@@ -68,7 +68,12 @@ export default {
           {
             trigger: 'blur',
             validator: async (rule, value, callback) => {
-              const result = await getDepartment()
+              let result = await getDepartment()
+              // 判断当前是否是编辑模式（编辑模式formData在查询的时候会被赋值）
+              if (this.formData.id) {
+                // 编辑场景
+                result = result.filter(item => item.id !== this.formData.id)
+              }
               if (result.some(item => item.code === value)) {
                 callback(new Error('部门中已经有该编码了'))
               } else {
@@ -90,7 +95,12 @@ export default {
           {
             trigger: 'blur',
             validator: async (rule, value, callback) => {
-              const result = await getDepartment()
+              let result = await getDepartment()
+              // 判断当前是否是编辑模式
+              if (this.formData.id) {
+                // 编辑场景
+                result = result.filter(item => item.id !== this.formData.id)
+              }
               if (result.some(item => item.name === value)) {
                 callback(new Error('部门中已经有该名称了'))
               } else {
@@ -109,10 +119,24 @@ export default {
     this.getManagerList()
   },
 
+  computed: {
+    showTitle() {
+      return this.formData.id ? '编辑部门' : '新增部门'
+    }
+  },
+
   methods: {
     // 关闭弹层
     close() {
+      this.formData = {
+        code: '', // 部门编码
+        introduce: '', // 介绍
+        managerId: '', // 部门负责人id
+        name: '', // 部门名称
+        pid: '', // 父级部门id
+      }
       // 重置表单
+      // resetFields()只能重置在模板data()中声明的数据
       this.$refs.addDept.resetFields()
       // 修改父组件的值 子传父
       this.$emit('update:showDialog', false)
@@ -124,14 +148,27 @@ export default {
     btnOK() {
       this.$refs.addDept.validate(async isOK => {
         if (isOK) {
-          this.formData.pid = this.currentNodeId
-          await addDepartment(this.formData)
+          let msg = '新增'
+          // 判断是否是编辑场景
+          if (this.formData.id) {
+            msg = '更新'
+            // 编辑场景
+            await updateDepartment(this.formData)
+          } else {
+            // 更新场景
+            this.formData.pid = this.currentNodeId
+            await addDepartment(this.formData)
+          }
           // 通知父组件进行更新
           this.$emit('updateDepartment')
-          this.$message.success('新增部门成功')
+          this.$message.success(`${msg}部门成功`)
           this.close();
         }
       })
+    },
+    // 获取部门的详情
+    async getDepartmentDetail() {
+      this.formData = await getDepartmentDetail(this.currentNodeId)
     },
   },
 
