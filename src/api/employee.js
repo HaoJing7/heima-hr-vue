@@ -21,3 +21,24 @@ export function exportEmployee() {
     responseType: 'blob' // 使用blob来接受二进制文件流
   })
 }
+
+/**
+ * 下载导入模板
+ */
+export function getExportTemplate() {
+  return request({
+    url: '/sys/user/import/template',
+    responseType: 'blob'
+  })
+}
+
+/**
+ * 上传Excel文件
+ */
+export function uploadExcel(data) {
+  return request({
+    url: '/sys/user/import',
+    method: 'post',
+    data  // form-data类型，因为要上传文件
+  })
+}
