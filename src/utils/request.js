@@ -8,7 +8,7 @@ const service = axios.create({
   // baseURL: '/api',
   baseURL: process.env.VUE_APP_BASE_API,
   // 超时时间 ms
-  timeout: 10000
+  timeout: 100000
 })
 
 // 请求拦截器
@@ -29,7 +29,10 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response) => {
     // 解构数据
-    const {data, message, success} = response.data
+    // 判断是不是blob
+    if (response.data instanceof Blob)
+      return response.data
+    const {data, message, success} = response.data // 默认是json格式
     if (success) {
       return data
     } else {
