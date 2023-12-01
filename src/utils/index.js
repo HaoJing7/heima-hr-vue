@@ -128,7 +128,10 @@ export function transListToTreeData(list, rootValue) {
       arr.push(item)
       // 先把item给push进去再给item赋值也是可以的
       // 因为两个item指向的是同一个地址
-      item.children = transListToTreeData(list, item.id)
+      const children  = transListToTreeData(list, item.id)
+      if (children.length > 0) {
+        item.children = children  // 只有有子节点的情况下才会赋值children
+      }
     }
   })
   return arr;
