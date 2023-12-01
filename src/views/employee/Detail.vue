@@ -27,6 +27,7 @@
                   v-model="userInfo.mobile"
                   size="mini"
                   class="inputW"
+                  :disabled="!!$route.params.id"
                 />
               </el-form-item>
             </el-col>
@@ -36,7 +37,7 @@
               <el-form-item label="部门" prop="departmentId">
                 <!-- 放置及联部门组件 会单独封装-->
                 <!--inputW样式会给到SelectTree组件中template下的第一层-->
-                <select-tree class="inputW"></select-tree>
+                <select-tree class="inputW" v-model="userInfo.departmentId"></select-tree>
               </el-form-item>
             </el-col>
           </el-row>
@@ -97,9 +98,16 @@
 
 <script>
 import SelectTree from './components/SelectTree.vue'
+import {addEmployee, getEmployeeDetail, updateEmployee} from "@/api/employee";
 export default {
   components: {
     SelectTree
+  },
+  created() {
+    // 获取路由参数中的id
+    if (this.$route.params.id) {
+      this.getEmployeeDetail()
+    }
   },
   data() {
     return {
@@ -142,7 +150,23 @@ export default {
   },
   methods: {
     saveData() {
-      this.$refs.userForm.validate()
+      this.$refs.userForm.validate(async isOK => {
+        if (isOK) {
+          // 校验通过
+          // 判断是否为编辑模式
+          if (this.$route.params.id) {
+            await updateEmployee(this.userInfo)
+            this.$message.success('修改员工成功')
+          } else {
+            await addEmployee(this.userInfo)
+            this.$message.success('新增员工成功')
+          }
+          this.$router.push('/employee')
+        }
+      })
+    },
+    async getEmployeeDetail() {
+      this.userInfo = await getEmployeeDetail(this.$route.params.id)
     }
   }
 }

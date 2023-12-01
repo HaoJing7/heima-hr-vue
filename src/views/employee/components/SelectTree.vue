@@ -1,10 +1,13 @@
 <template>
   <!--ElementUI的级联组件-->
+  <!--前面的value给了级联组件，后面的value来自父组件-->
   <el-cascader
+    :value="value"
     size="mini"
     :options="treeData"
     :props="props"
     separator="-"
+    @change="changeValue"
   >
   </el-cascader>
 </template>
@@ -14,6 +17,12 @@ import {getDepartment} from "@/api/department";
 import {transListToTreeData} from "@/utils";
 
 export default {
+  props: {
+    value: {
+      type: Number,
+      default: null
+    }
+  },
   data() {
     return {
       treeData: [], // 赋值给级联组件的options
@@ -31,6 +40,15 @@ export default {
       const result = await getDepartment()
       this.treeData = transListToTreeData(result, 0)
       // console.log(this.treeData)
+    },
+    changeValue(list) {
+      // console.log(list)
+      // data是数组 取到数组的最后一位
+      if (list.length > 0) {
+        this.$emit('input', list[list.length - 1])
+      } else {
+        this.$emit('input', null)
+      }
     }
   },
 }
